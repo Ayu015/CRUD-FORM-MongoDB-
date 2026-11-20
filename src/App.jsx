@@ -1,39 +1,66 @@
 import { useState } from "react";
 
 function App() {
-
   const [student, setStudent] = useState({
     name: "",
     fatherName: "",
     email: "",
     mobile: "",
-    course: ""
+    course: "",
   });
 
   function handleChange(e) {
     setStudent({
       ...student,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    console.log(student);
+    try {
+      const response = await fetch("http://localhost:5000/students", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(student),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Student added successfully!");
+
+        console.log(data);
+
+        setStudent({
+          name: "",
+          fatherName: "",
+          email: "",
+          mobile: "",
+          course: "",
+        });
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      alert("Something went wrong!");
+    }
   }
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-5">
-
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">
-
         <h1 className="text-2xl font-bold text-center mb-6">
           Student Registration
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           <input
             type="text"
             name="name"
@@ -94,11 +121,8 @@ function App() {
           >
             Add Student
           </button>
-
         </form>
-
       </div>
-
     </div>
   );
 }
