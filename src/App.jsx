@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
   const [student, setStudent] = useState({
@@ -8,6 +8,23 @@ function App() {
     mobile: "",
     course: "",
   });
+
+  const [students, setStudents] = useState([]);
+  useEffect(() => {
+    async function fetchStudents() {
+      try {
+        const response = await fetch("http://localhost:5000/students");
+
+        const data = await response.json();
+
+        setStudents(data);
+      } catch (error) {
+        console.log("Error fetching students:", error);
+      }
+    }
+
+    fetchStudents();
+  }, []);
 
   function handleChange(e) {
     setStudent({
@@ -54,8 +71,9 @@ function App() {
   }
 
   return (
+    <div className="bg-gray-100 ">
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-5">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">
+      <div className="bg-white p-8 rounded-xl  shadow-lg w-full max-w-lg">
         <h1 className="text-2xl font-bold text-center mb-6">
           Student Registration
         </h1>
@@ -122,6 +140,35 @@ function App() {
             Add Student
           </button>
         </form>
+      </div>
+    </div>
+      <div className="mt-8 overflow-x-auto mb-10 bg-gray-100 mx-20">
+        <h2 className="text-xl font-bold mb-4">Students List</h2>
+
+        <table className="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border p-2">Name</th>
+              <th className="border p-2">Father Name</th>
+              <th className="border p-2">Email</th>
+              <th className="border p-2">Mobile</th>
+              <th className="border p-2">Course</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {students.map((item) => (
+              <tr key={item._id}>
+                
+                <td className="border p-2">{item.name}</td>
+                <td className="border p-2">{item.fatherName}</td>
+                <td className="border p-2">{item.email}</td>
+                <td className="border p-2">{item.mobile}</td>
+                <td className="border p-2">{item.course}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
