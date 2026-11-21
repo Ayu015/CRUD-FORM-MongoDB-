@@ -1,173 +1,167 @@
 # Student Management System
 
-A simple Student Management System built using **React.js, Node.js, Express.js, and MongoDB**.
+A full-stack Student Management System built with **React**, **Vite**, **Tailwind CSS**, **Node.js**, **Express**, and **MariaDB**.
 
-This project allows users to add student details and view all registered students. Student records are stored in MongoDB Atlas.
+## Features
 
-## 🚀 Technologies Used
+- Add a new student
+- View all registered students
+- Edit an existing student's details
+- Store student records in a MariaDB database
+- React frontend communicates with the Express REST API
 
-### Frontend
-- React.js
-- JavaScript
-- Tailwind CSS
-- HTML
+> **Current status:** Create, Read, and Update are implemented. Delete functionality is not implemented yet.
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB Atlas
-- Mongoose
-- CORS
-- dotenv
+## Tech Stack
 
-## ✨ Features Implemented
+- **Frontend:** React, Vite, Tailwind CSS, JavaScript
+- **Backend:** Node.js, Express.js
+- **Database:** MariaDB
+- **Database driver:** mysql2
 
-- Add new student records.
-- Store student details in MongoDB Atlas.
-- Fetch all student records from the database.
-- Display students in a responsive table.
-- Form validation using HTML required attributes.
-- Clear form fields after successful submission.
-
-## 📋 Student Information
-
-The application stores the following details:
-
-- Student Name
-- Father's Name
-- Email
-- Mobile Number
-- Course
-
-## 📁 Project Structure
+## Project Structure
 
 ```text
 student-management/
-│
 ├── backend/
-│   ├── models/
-│   │   └── Student.js
+│   ├── db.js
 │   ├── server.js
-│   ├── .env
 │   ├── package.json
-│   └── node_modules/
-│
+│   └── .env.example
 ├── src/
 │   ├── App.jsx
 │   ├── index.css
 │   └── main.jsx
-│
-├── public/
+├── index.html
 ├── package.json
 ├── .gitignore
 └── README.md
 ```
 
-## ⚙️ Installation and Setup
+Your exact folder structure may differ slightly depending on your local setup.
 
-### 1. Clone the Repository
+## Prerequisites
+
+- Node.js and npm
+- MariaDB Server
+- Git (optional)
+
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Ayu015/CRUD-FORM-MongoDB-.git
-```
-
-### 2. Navigate to Project Directory
-
-```bash
 cd CRUD-FORM-MongoDB-
 ```
 
-### 3. Install Frontend Dependencies
+## 2. Set Up the Database
 
-```bash
-npm install
+Open the MariaDB command-line client and run:
+
+```sql
+CREATE DATABASE studentManagement;
+
+USE studentManagement;
+
+CREATE TABLE students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    fatherName VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    mobile VARCHAR(15) NOT NULL,
+    course VARCHAR(50) NOT NULL
+);
 ```
 
-### 4. Install Backend Dependencies
+The SQL statements and sample/test records used during development can be shared in the repository, provided they contain only fictional test data and no real personal or confidential information.
+
+## 3. Configure the Backend
+
+Open a terminal in the `backend` directory:
 
 ```bash
 cd backend
 npm install
 ```
 
-### 5. Configure Environment Variables
+Configure your MariaDB connection in `backend/db.js`, or preferably store credentials in `backend/.env` and read them through environment variables.
 
-Create a `.env` file inside the backend folder.
+Typical local connection settings:
 
-Add your MongoDB connection string:
+- Host: `localhost`
+- User: your MariaDB username
+- Password: your local MariaDB password
+- Database: `studentManagement`
+- Port: `3306`
 
-```env
-MONGO_URI=your_mongodb_connection_string
-```
+**Never commit the real `.env` file, passwords, API keys, or other credentials.** You can commit a `.env.example` file containing placeholder values only.
 
-Replace the placeholder with your MongoDB Atlas connection string.
-
-### 6. Start the Backend Server
-
-Inside the backend folder, run:
+Start the backend:
 
 ```bash
 node server.js
 ```
 
-Backend runs at:
+The API server runs at:
 
 ```text
 http://localhost:5000
 ```
 
-### 7. Start the Frontend
+## 4. Start the Frontend
 
-Open another terminal in the main project directory and run:
+Open a second terminal in the project root:
 
 ```bash
+npm install
 npm run dev
 ```
 
-Frontend runs at:
+Open the local URL printed by Vite, usually:
 
 ```text
 http://localhost:5173
 ```
 
-## 🔗 API Endpoints
+## API Endpoints
 
-| Method | Endpoint | Description |
+| Method | Endpoint | Purpose |
 |---|---|---|
-| POST | `/students` | Add a new student |
-| GET | `/students` | Fetch all students |
+| GET | `/students` | Retrieve all students |
+| POST | `/students` | Add a student |
+| PUT | `/students/:id` | Update a student by ID |
 
-## 🗄️ Database Structure
+## Git and Data Privacy
 
-**Database:** `studentManagement`
+The `.gitignore` file excludes files that should remain local or private, such as:
 
-**Collection:** `students`
+- `.env` files containing database passwords or other secrets
+- `node_modules`
+- Build output and logs
+- Local editor and operating-system configuration
+- Private keys and certificates
 
-Each student document contains:
+**SQL files, database schema scripts, and fictional test data are not ignored by this `.gitignore`.** They can be committed when useful for project setup or testing.
 
-```json
-{
-  "name": "Ayush Singh",
-  "fatherName": "Father Name",
-  "email": "student@example.com",
-  "mobile": "9876543210",
-  "course": "B.Tech"
-}
+Before pushing, check that you are not committing real personal or confidential information, such as real students' names with contact details, passwords, access tokens, private keys, or confidential company data.
+
+Check what Git will include:
+
+```bash
+git status
+git diff --cached --name-only
 ```
 
-## 🛠️ Upcoming Features
+Note: `.gitignore` does not untrack files that were already committed. If a real secret was committed earlier, remove it from Git tracking/history as appropriate and rotate the exposed credential.
 
-- [ ] Edit student details (UPDATE).
-- [ ] Delete student records (DELETE).
-- [ ] Improve UI and user experience.
-- [ ] Add better form validation.
+## Future Improvements
 
-## 👨‍💻 Developer
+- Delete student records
+- Search and filter students
+- Form validation and clearer error messages
+- Pagination for larger student lists
+- Improved responsive UI
+- Authentication and authorization before using real student information
 
-**Ayush Singh**
+## License
 
-B.Tech Graduate | Full Stack Development Learner
-
----
-
-⭐ If you find this project useful, consider giving it a star!
+No license has been specified yet.

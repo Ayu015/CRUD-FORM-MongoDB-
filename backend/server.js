@@ -1,10 +1,6 @@
 const cors = require("cors");
-
-const Student = require("./models/Student");
-
-const mongoose = require("mongoose");
+const db = require("./db");
 require("dotenv").config();
-
 const express = require("express");
 
 const app = express();
@@ -16,50 +12,75 @@ app.get("/", (req, res) => {
     res.send("Hello! Backend is working.");
 });
 
-app.get("/students", async (req, res) => {
-    try {
-        const students = await Student.find();
+app.get("/students", (req, res) => {
+    const sql = "SELECT * FROM students";
 
-        res.status(200).json(students);
+    db.query(sql, (error, results) => {
+        if (error) {
+            return res.status(500).json({
+                message: "Error fetching students",
+                error: error.message
+            });
+        }
 
-    } catch (error) {
-        res.status(500).json({
-            message: "Error fetching students",
-            error: error.message
-        });
-    }
+        res.status(200).json(results);
+    });
 });
 
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log("MongoDB Connected Successfully!");
-    })
-    .catch((error) => {
-        console.log("MongoDB Connection Failed:", error);
-    });
+    
+    
+    app.post("/students", (req, res) => {
+    const { name, fatherName, email, mobile, course } = req.body;
 
-    
-    
-    app.post("/students", async (req, res) => {
-        try {
-            const newStudent = new Student(req.body);
-            
-            await newStudent.save();
-            
-            res.status(201).json({
-                message: "Student added successfully!",
-                student: newStudent
-            });
-            
-        } catch (error) {
-            res.status(500).json({
+    const sql = `
+        INSERT INTO students (name, fatherName, email, mobile, course)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+
+    const values = [name, fatherName, email, mobile, course];
+
+    db.query(sql, values, (error, results) => {
+        if (error) {
+            return res.status(500).json({
                 message: "Error adding student",
                 error: error.message
             });
         }
+
+        res.status(201).json({
+            message: "Student added successfully!",
+            studentId: results.insertId
+        });
     });
+});
 
+    // Update Student
+app.put("/students/:id", (req, res) => {
+    const { id } = req.params;
 
+    const { name, fatherName, email, mobile, course } = req.body;
+
+    const sql = `
+        UPDATE students
+        SET name = ?, fatherName = ?, email = ?, mobile = ?, course = ?
+        WHERE id = ?
+    `;
+
+    const values = [name, fatherName, email, mobile, course, id];
+
+    db.query(sql, values, (error, results) => {
+        if (error) {
+            return res.status(500).json({
+                message: "Error updating student",
+                error: error.message
+            });
+        }
+
+        res.status(200).json({
+            message: "Student updated successfully!"
+        });
+    });
+});
 
     app.listen(5000, () => {
         console.log("Server is running on port 5000");
